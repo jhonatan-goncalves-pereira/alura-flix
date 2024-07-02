@@ -1,76 +1,83 @@
 import React, { useState, useEffect } from 'react';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
-import Banner from '../../components/Banner';
 import CategorySection from '../../components/CategorySection';
-import styles from './Home.module.css';
+import EditModal from '../../components/EditModal';
+import styles from './Home.module.css'; // Importe o CSS module corretamente
 
 const Home = () => {
-  const [videos, setVideos] = useState({
-    frontend: [],
-    backend: [],
-    inovacao: [],
-    gestao: []
-  });
+  const [videos, setVideos] = useState([]);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [selectedVideo, setSelectedVideo] = useState(null);
 
   useEffect(() => {
-    const fetchVideos = async () => {
-      try {
-        const response = await fetch('http://localhost:3001/videos');
-        if (!response.ok) {
-          throw new Error('Não foi possível obter os dados.');
-        }
-        const data = await response.json();
-        organizeVideosByCategory(data);
-      } catch (error) {
-        console.error('Erro ao obter dados:', error);
-      }
-    };
-
     fetchVideos();
   }, []);
 
-  const organizeVideosByCategory = (data) => {
-    const organizedVideos = {
-      frontend: [],
-      backend: [],
-      inovacao: [],
-      gestao: []
-    };
+  const fetchVideos = () => {
+    fetch('http://localhost:3001/videos')
+      .then(response => response.json())
+      .then(data => {
+        setVideos(data);
+      })
+      .catch(error => {
+        console.error('Error fetching videos:', error);
+      });
+  };
 
-    data.forEach(video => {
-      switch (video.category) {
-        case 'Frontend':
-          organizedVideos.frontend.push(video);
-          break;
-        case 'Backend':
-          organizedVideos.backend.push(video);
-          break;
-        case 'Inovação':
-          organizedVideos.inovacao.push(video);
-          break;
-        case 'Gestão':
-          organizedVideos.gestao.push(video);
-          break;
-        default:
-          break;
-      }
-    });
+  const handleEdit = (video) => {
+    setSelectedVideo(video);
+    setEditModalOpen(true);
+  };
 
-    setVideos(organizedVideos);
+  const handleCloseModal = () => {
+    setEditModalOpen(false);
+    setSelectedVideo(null);
+  };
+
+  const handleSaveModal = (updatedVideo) => {
+    fetch(`http://localhost:3001/videos/${updatedVideo.id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(updatedVideo),
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Video updated successfully:', data);
+        // Atualiza o vídeo localmente após edição
+        const updatedVideos = videos.map(video =>
+          video.id === updatedVideo.id ? updatedVideo : video
+        );
+        setVideos(updatedVideos);
+        handleCloseModal(); // Fecha o modal após salvar
+      })
+      .catch(error => {
+        console.error('Error updating video:', error);
+        // Trate o erro adequadamente, se necessário
+      });
   };
 
   return (
     <div>
       <Header />
-      <Banner imageUrl="https://via.placeholder.com/1200x300" title="Destaques do AluraFlix" />
-      <div className={styles.home}>
-        <CategorySection title="Frontend" videos={videos.frontend} />
-        <CategorySection title="Backend" videos={videos.backend} />
-        <CategorySection title="Inovação" videos={videos.inovacao} />
-        <CategorySection title="Gestão" videos={videos.gestao} />
-      </div>
+      <main className={styles.home}>
+        <h1>AluraFlix</h1>
+        <CategorySection title="Frontend" videos={videos.filter(video => video.category === 'Frontend')} onEdit={handleEdit} />
+        <CategorySection title="Backend" videos={videos.filter(video => video.category === 'Backend')} onEdit={handleEdit} />
+        <CategorySection title="Inovação" videos={videos.filter(video => video.category === 'Inovação')} onEdit={handleEdit} />
+        <CategorySection title="Gestão" videos={videos.filter(video => video.category === 'Gestão')} onEdit={handleEdit} />
+      </main>
       <Footer />
+      {editModalOpen && (
+        <EditModal
+          video={selectedVideo}
+          isOpen={editModalOpen}
+          onClose={handleCloseModal}
+          onSave={handleSaveModal}
+        />
+      )}
     </div>
   );
 };
