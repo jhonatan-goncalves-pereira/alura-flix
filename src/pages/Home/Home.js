@@ -1,79 +1,77 @@
-import React, { useState } from 'react';
-import Banner from '../../components/Banner';
+import React, { useState, useEffect } from 'react';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
+import Banner from '../../components/Banner';
 import CategorySection from '../../components/CategorySection';
-import EditModal from '../../components/EditModal';
+import styles from './Home.module.css';
 
 const Home = () => {
   const [videos, setVideos] = useState({
-    frontend: [
-      { id: 1, title: 'React Basics', imageUrl: 'https://via.placeholder.com/200' },
-      { id: 2, title: 'Advanced CSS', imageUrl: 'https://via.placeholder.com/200' },
-    ],
-    backend: [
-      { id: 3, title: 'Node.js Introduction', imageUrl: 'https://via.placeholder.com/200' },
-      { id: 4, title: 'Express.js Guide', imageUrl: 'https://via.placeholder.com/200' },
-    ],
-    innovation: [
-      { id: 5, title: 'Design Thinking', imageUrl: 'https://via.placeholder.com/200' },
-      { id: 6, title: 'Agile Methodologies', imageUrl: 'https://via.placeholder.com/200' },
-    ],
-    management: [
-      { id: 7, title: 'Project Management', imageUrl: 'https://via.placeholder.com/200' },
-      { id: 8, title: 'Leadership Skills', imageUrl: 'https://via.placeholder.com/200' },
-    ],
+    frontend: [],
+    backend: [],
+    inovacao: [],
+    gestao: []
   });
 
-  const [selectedVideo, setSelectedVideo] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  useEffect(() => {
+    const fetchVideos = async () => {
+      try {
+        const response = await fetch('http://localhost:3001/videos');
+        if (!response.ok) {
+          throw new Error('Não foi possível obter os dados.');
+        }
+        const data = await response.json();
+        organizeVideosByCategory(data);
+      } catch (error) {
+        console.error('Erro ao obter dados:', error);
+      }
+    };
 
-  const handleEdit = (video) => {
-    setSelectedVideo(video);
-    setIsModalOpen(true);
-  };
+    fetchVideos();
+  }, []);
 
-  const handleDelete = (category, videoId) => {
-    const updatedVideos = { ...videos };
-    updatedVideos[category] = updatedVideos[category].filter(video => video.id !== videoId);
-    setVideos(updatedVideos);
-  };
+  const organizeVideosByCategory = (data) => {
+    const organizedVideos = {
+      frontend: [],
+      backend: [],
+      inovacao: [],
+      gestao: []
+    };
 
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-    setSelectedVideo(null);
-  };
+    data.forEach(video => {
+      switch (video.category) {
+        case 'Frontend':
+          organizedVideos.frontend.push(video);
+          break;
+        case 'Backend':
+          organizedVideos.backend.push(video);
+          break;
+        case 'Inovação':
+          organizedVideos.inovacao.push(video);
+          break;
+        case 'Gestão':
+          organizedVideos.gestao.push(video);
+          break;
+        default:
+          break;
+      }
+    });
 
-  const handleSaveVideo = (updatedVideo) => {
-    const updatedVideos = { ...videos };
-    const category = Object.keys(updatedVideos).find(category =>
-      updatedVideos[category].some(video => video.id === updatedVideo.id)
-    );
-    updatedVideos[category] = updatedVideos[category].map(video =>
-      video.id === updatedVideo.id ? updatedVideo : video
-    );
-    setVideos(updatedVideos);
+    setVideos(organizedVideos);
   };
 
   return (
-    <>
+    <div>
       <Header />
       <Banner imageUrl="https://via.placeholder.com/1200x300" title="Destaques do AluraFlix" />
-      <CategorySection title="Frontend" videos={videos.frontend} onEdit={handleEdit} onDelete={handleDelete} />
-      <CategorySection title="Backend" videos={videos.backend} onEdit={handleEdit} onDelete={handleDelete} />
-      <CategorySection title="Inovação" videos={videos.innovation} onEdit={handleEdit} onDelete={handleDelete} />
-      <CategorySection title="Gestão" videos={videos.management} onEdit={handleEdit} onDelete={handleDelete} />
+      <div className={styles.home}>
+        <CategorySection title="Frontend" videos={videos.frontend} />
+        <CategorySection title="Backend" videos={videos.backend} />
+        <CategorySection title="Inovação" videos={videos.inovacao} />
+        <CategorySection title="Gestão" videos={videos.gestao} />
+      </div>
       <Footer />
-
-      {selectedVideo && (
-        <EditModal
-          video={selectedVideo}
-          isOpen={isModalOpen}
-          onClose={handleCloseModal}
-          onSave={handleSaveVideo}
-        />
-      )}
-    </>
+    </div>
   );
 };
 
