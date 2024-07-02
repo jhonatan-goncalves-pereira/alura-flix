@@ -10,7 +10,9 @@ const NovoVideo = () => {
   const [videoUrl, setVideoUrl] = useState('');
   const [description, setDescription] = useState('');
 
-  const handleSave = () => {
+  const handleSave = (e) => {
+    e.preventDefault(); // Evita o comportamento padrão de enviar o formulário
+
     // Lógica para salvar o vídeo
     console.log({ title, category, imageUrl, videoUrl, description });
   };
@@ -26,9 +28,9 @@ const NovoVideo = () => {
   return (
     <div>
       <Header />
-      <main className={styles.novoVideo}> {/* Use a classe do CSS module aqui */}
+      <main className={styles.novoVideo}> 
         <h1>Novo Vídeo</h1>
-        <form>
+        <form onSubmit={handleSave}> {/* Adicione o evento onSubmit para capturar o envio do formulário */}
           <label>
             Título:
             <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} />
@@ -55,7 +57,7 @@ const NovoVideo = () => {
             Descrição:
             <textarea value={description} onChange={(e) => setDescription(e.target.value)}></textarea>
           </label>
-          <button type="button" onClick={handleSave}>Salvar</button>
+          <button type="submit">Salvar</button> {/* Remova type="button" para usar o padrão de submit do formulário */}
           <button type="button" onClick={handleClear}>Limpar</button>
         </form>
       </main>
