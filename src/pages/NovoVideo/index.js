@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
-import styles from './NovoVideo.module.css'; // Importe o CSS module corretamente
+import styles from './NovoVideo.module.css';
 
 const NovoVideo = () => {
   const [title, setTitle] = useState('');
@@ -10,11 +10,40 @@ const NovoVideo = () => {
   const [videoUrl, setVideoUrl] = useState('');
   const [description, setDescription] = useState('');
 
-  const handleSave = (e) => {
-    e.preventDefault(); // Evita o comportamento padrão de enviar o formulário
+  const handleSave = async () => {
+    const newVideo = {
+      title,
+      category,
+      imageUrl,
+      videoUrl,
+      description
+    };
 
-    // Lógica para salvar o vídeo
-    console.log({ title, category, imageUrl, videoUrl, description });
+    try {
+      const response = await fetch('http://localhost:3001/videos', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newVideo),
+      });
+
+      if (!response.ok) {
+        throw new Error('Não foi possível criar o novo vídeo.');
+      }
+
+      // Limpa os campos após salvar
+      setTitle('');
+      setCategory('');
+      setImageUrl('');
+      setVideoUrl('');
+      setDescription('');
+      
+      // Redireciona ou atualiza os vídeos na página inicial
+      // Implementação depende da lógica da sua aplicação
+    } catch (error) {
+      console.error('Erro ao criar novo vídeo:', error);
+    }
   };
 
   const handleClear = () => {
@@ -28,9 +57,9 @@ const NovoVideo = () => {
   return (
     <div>
       <Header />
-      <main className={styles.novoVideo}> 
+      <main className={styles.novoVideo}>
         <h1>Novo Vídeo</h1>
-        <form onSubmit={handleSave}> {/* Adicione o evento onSubmit para capturar o envio do formulário */}
+        <form>
           <label>
             Título:
             <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} />
@@ -57,7 +86,7 @@ const NovoVideo = () => {
             Descrição:
             <textarea value={description} onChange={(e) => setDescription(e.target.value)}></textarea>
           </label>
-          <button type="submit">Salvar</button> {/* Remova type="button" para usar o padrão de submit do formulário */}
+          <button type="button" onClick={handleSave}>Salvar</button>
           <button type="button" onClick={handleClear}>Limpar</button>
         </form>
       </main>
