@@ -1,24 +1,23 @@
 .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 20px;
-    background-color: rgba(0, 0, 0, .9);
-    color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: rgba(0, 0, 0, .9);
+  color: white;
+}
 
-  }
-  
-  .logo h1 {
-    margin: 0;
-  }
-  
-  .nav-link {
-    margin: 0 10px;
-    color: white;
-    text-decoration: none;
-  }
-  
-  .nav-link:hover {
-    text-decoration: underline;
-  }
-  
+.logo img {
+  width: 100px;
+}
+
+.nav-link {
+  color: white;
+  text-decoration: none;
+  margin: 0 10px;
+}
+
+.nav-link.active {
+  font-weight: bold;
+  text-decoration: underline;
+}
