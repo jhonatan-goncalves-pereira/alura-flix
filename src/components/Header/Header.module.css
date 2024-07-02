@@ -13,13 +13,13 @@
   width: 100px;
 }
 
-.nav-link {
+.navLink {
   color: white;
   text-decoration: none;
   margin: 0 10px;
 }
 
-.nav-link.active {
+.navLink.active {
   font-weight: bold;
   text-decoration: underline;
 }
