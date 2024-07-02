@@ -1,0 +1,29 @@
+.categorySection {
+    padding: 20px;
+  }
+  
+  .categorySection h3 {
+    margin-bottom: 10px;
+  }
+  
+  .videos {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+  }
+  
+  .videoItem {
+    width: 100px;
+    min-width: 200px;
+    margin-right: 10px;
+  }
+  
+  .videoItem img {
+    width: 100%;
+    height: auto;
+  }
+  
+  .videoItem p {
+    text-align: center;
+  }
+  
