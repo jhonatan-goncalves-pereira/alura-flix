@@ -15,15 +15,17 @@ const Home = () => {
     fetchVideos();
   }, []);
 
-  const fetchVideos = () => {
-    fetch('https://json-server-vercel-aluraflix.vercel.app/videos')
-      .then(response => response.json())
-      .then(data => {
-        setVideos(data);
-      })
-      .catch(error => {
-        console.error('Error fetching videos:', error);
-      });
+  const fetchVideos = async () => {
+    try {
+      const response = await fetch('https://json-server-vercel-aluraflix.vercel.app/videos');
+      if (!response.ok) {
+        throw new Error('Failed to fetch videos');
+      }
+      const data = await response.json();
+      setVideos(data);
+    } catch (error) {
+      console.error('Error fetching videos:', error);
+    }
   };
 
   const handleEdit = (video) => {
@@ -34,6 +36,7 @@ const Home = () => {
   const handleCloseModal = () => {
     setEditModalOpen(false);
     setSelectedVideo(null);
+    fetchVideos(); // Atualiza a lista de vídeos após fechar o modal de edição
   };
 
   const handleSaveModal = (updatedVideo) => {
@@ -50,12 +53,8 @@ const Home = () => {
         }
         return response.json();
       })
-      .then(data => {
-        // Atualiza o estado dos vídeos
-        const updatedVideos = videos.map(video =>
-          video.id === data.id ? data : video
-        );
-        setVideos(updatedVideos);
+      .then(() => {
+        fetchVideos(); // Atualiza a lista de vídeos após salvar as alterações
         handleCloseModal();
       })
       .catch(error => {
@@ -71,12 +70,11 @@ const Home = () => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
-        // Atualiza o estado dos vídeos
-        const updatedVideos = videos.filter(video => video.id !== videoId);
-        setVideos(updatedVideos);
+        fetchVideos(); // Atualiza a lista de vídeos após excluir o vídeo
       })
       .catch(error => {
         console.error('Error deleting video:', error);
+        fetchVideos(); // Atualiza a lista de vídeos mesmo se ocorrer um erro na exclusão
       });
   };
 

@@ -20,7 +20,7 @@ const NovoVideo = () => {
     };
 
     try {
-      const response = await fetch('http://localhost:3001/videos', {
+      const response = await fetch('https://json-server-vercel-aluraflix.vercel.app/videos', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -29,7 +29,8 @@ const NovoVideo = () => {
       });
 
       if (!response.ok) {
-        throw new Error('Não foi possível criar o novo vídeo.');
+        const errorText = await response.text();
+        throw new Error(`Erro: ${response.status} - ${errorText}`);
       }
 
       // Limpa os campos após salvar
@@ -38,11 +39,12 @@ const NovoVideo = () => {
       setImageUrl('');
       setVideoUrl('');
       setDescription('');
-      
+
       // Redireciona ou atualiza os vídeos na página inicial
-      // Implementação depende da lógica da sua aplicação
+      alert('Vídeo criado com sucesso!');
     } catch (error) {
       console.error('Erro ao criar novo vídeo:', error);
+      alert('Erro ao criar novo vídeo: ' + error.message);
     }
   };
 

@@ -1,13 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './EditModal.module.css';
 
 const EditModal = ({ video, isOpen, onClose, onSave }) => {
-  const [title, setTitle] = useState(video.title);
-  const [imageUrl, setImageUrl] = useState(video.imageUrl);
-  const [videoUrl, setVideoUrl] = useState(video.videoUrl);
-  const [description, setDescription] = useState(video.description);
+  const [title, setTitle] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
+  const [videoUrl, setVideoUrl] = useState('');
+  const [description, setDescription] = useState('');
 
-  const handleSave = () => {
+  useEffect(() => {
+    if (video) {
+      setTitle(video.title || '');
+      setImageUrl(video.imageUrl || '');
+      setVideoUrl(video.videoUrl || '');
+      setDescription(video.description || '');
+    }
+  }, [video]);
+
+  const handleSave = async () => {
     const updatedVideo = {
       ...video,
       title,
@@ -15,7 +24,20 @@ const EditModal = ({ video, isOpen, onClose, onSave }) => {
       videoUrl,
       description,
     };
-    onSave(updatedVideo);
+
+    try {
+      await onSave(updatedVideo);
+      alert('Vídeo atualizado com sucesso!');
+      onClose(); // Fecha o modal após salvar com sucesso
+      // Limpa os campos após salvar
+      setTitle('');
+      setImageUrl('');
+      setVideoUrl('');
+      setDescription('');
+    } catch (error) {
+      console.error('Erro ao salvar vídeo:', error);
+      alert('Erro ao salvar vídeo: ' + error.message);
+    }
   };
 
   if (!isOpen) {
