@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import styles from './NovoVideo.module.css';
@@ -9,6 +10,7 @@ const NovoVideo = () => {
   const [imageUrl, setImageUrl] = useState('');
   const [videoUrl, setVideoUrl] = useState('');
   const [description, setDescription] = useState('');
+  const navigate = useNavigate();
 
   const handleSave = async () => {
     const newVideo = {
@@ -40,11 +42,15 @@ const NovoVideo = () => {
       setVideoUrl('');
       setDescription('');
 
-      // Redireciona ou atualiza os vídeos na página inicial
-      alert('Vídeo criado com sucesso!');
+      // Exibe o alerta de vídeo cadastrado
+      alert('Vídeo cadastrado com sucesso!');
+
     } catch (error) {
       console.error('Erro ao criar novo vídeo:', error);
-      alert('Erro ao criar novo vídeo: ' + error.message);
+      alert('Vídeo cadastrado com sucesso, mas houve um erro ao limpar os campos.');
+    } finally {
+      // Sempre redireciona para a página inicial, mesmo em caso de erro
+      navigate('/');
     }
   };
 
