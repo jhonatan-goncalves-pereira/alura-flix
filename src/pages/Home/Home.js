@@ -51,6 +51,7 @@ const Home = () => {
         return response.json();
       })
       .then(data => {
+        // Atualiza o estado dos vídeos
         const updatedVideos = videos.map(video =>
           video.id === data.id ? data : video
         );
@@ -70,6 +71,7 @@ const Home = () => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
+        // Atualiza o estado dos vídeos
         const updatedVideos = videos.filter(video => video.id !== videoId);
         setVideos(updatedVideos);
       })
