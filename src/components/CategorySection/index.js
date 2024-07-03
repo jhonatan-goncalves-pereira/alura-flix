@@ -1,24 +1,33 @@
-// CategorySection.js
+import React, { useState } from 'react';
+import VideoPopup from '../VideoPopup'; // Importe o componente VideoPopup
 
-import React from 'react';
-import styles from './CategorySection.module.css';
+const CategorySection = ({ title, videos }) => {
+  const [selectedVideo, setSelectedVideo] = useState(null);
 
-const CategorySection = ({ title, videos, onEdit, onDelete }) => (
-  <section className={styles.categorySection}>
-    <h3>{title}</h3>
-    <div className={styles.videos}>
-      {videos.map((video, index) => (
-        <div key={index} className={styles.videoItem}>
-          <img src={video.imageUrl} alt={video.title} />
-          <p>{video.title}</p>
-          <div className={styles.buttons}>
-            <button onClick={() => onEdit(video)}>Editar</button>
-            <button onClick={() => onDelete(video.id)}>Excluir</button>
+  const openVideoPopup = (videoUrl) => {
+    setSelectedVideo(videoUrl);
+  };
+
+  const closeVideoPopup = () => {
+    setSelectedVideo(null);
+  };
+
+  return (
+    <div>
+      <h2>{title}</h2>
+      <div className="card-list">
+        {videos.map(video => (
+          <div key={video.id} className="card" onClick={() => openVideoPopup(video.videoUrl)}>
+            <h3>{video.title}</h3>
+            <p>{video.description}</p>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
+      {selectedVideo && (
+        <VideoPopup videoUrl={selectedVideo} onClose={closeVideoPopup} />
+      )}
     </div>
-  </section>
-);
+  );
+};
 
 export default CategorySection;
