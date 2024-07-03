@@ -5,6 +5,8 @@ function Banner() {
   const [currentVideo, setCurrentVideo] = useState(null);
   const [backgroundImage, setBackgroundImage] = useState('');
 
+  const API_URL = 'https://json-server-vercel-aluraflix.vercel.app/videos';
+
   useEffect(() => {
     fetchVideos();
     const interval = setInterval(fetchVideos, 5000);
@@ -13,7 +15,7 @@ function Banner() {
 
   const fetchVideos = async () => {
     try {
-      const response = await fetch('http://localhost:3001/videos');
+      const response = await fetch(API_URL);
       if (!response.ok) {
         throw new Error('Failed to fetch videos');
       }

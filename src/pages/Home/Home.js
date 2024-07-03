@@ -16,7 +16,7 @@ const Home = () => {
   }, []);
 
   const fetchVideos = () => {
-    fetch('http://localhost:3001/videos')
+    fetch('https://json-server-vercel-aluraflix.vercel.app/videos')
       .then(response => response.json())
       .then(data => {
         setVideos(data);
@@ -37,7 +37,7 @@ const Home = () => {
   };
 
   const handleSaveModal = (updatedVideo) => {
-    fetch(`http://localhost:3001/videos/${updatedVideo.id}`, {
+    fetch(`https://json-server-vercel-aluraflix.vercel.app/videos/${updatedVideo.id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -63,7 +63,7 @@ const Home = () => {
   };
 
   const handleDelete = (videoId) => {
-    fetch(`http://localhost:3001/videos/${videoId}`, {
+    fetch(`https://json-server-vercel-aluraflix.vercel.app/videos/${videoId}`, {
       method: 'DELETE',
     })
       .then(response => {
@@ -81,7 +81,7 @@ const Home = () => {
   return (
     <div>
       <Header />
-      <Banner></Banner>
+      <Banner />
       <main className={styles.home}>
         <h1>AluraFlix</h1>
         <CategorySection
