@@ -3,7 +3,8 @@ import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import CategorySection from '../../components/CategorySection';
 import EditModal from '../../components/EditModal';
-import styles from './Home.module.css'; // Importe o CSS module corretamente
+import styles from './Home.module.css';
+import Banner from '../../components/Banner';
 
 const Home = () => {
   const [videos, setVideos] = useState([]);
@@ -15,7 +16,7 @@ const Home = () => {
   }, []);
 
   const fetchVideos = () => {
-    fetch('/api/videos')
+    fetch('http://localhost:3001/videos')
       .then(response => response.json())
       .then(data => {
         setVideos(data);
@@ -36,44 +37,77 @@ const Home = () => {
   };
 
   const handleSaveModal = (updatedVideo) => {
-    fetch(`/api/videos/${updatedVideo.id}`, {
+    fetch(`http://localhost:3001/videos/${updatedVideo.id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(updatedVideo),
     })
-    .then(response => response.json())
-    .then(data => {
-      const updatedVideos = videos.map(video =>
-        video.id === data.id ? data : video
-      );
-      setVideos(updatedVideos);
-      handleCloseModal();
-    })
-    .catch(error => console.error('Error updating video:', error));
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        const updatedVideos = videos.map(video =>
+          video.id === data.id ? data : video
+        );
+        setVideos(updatedVideos);
+        handleCloseModal();
+      })
+      .catch(error => {
+        console.error('Error updating video:', error);
+      });
   };
 
-  const handleDelete = (id) => {
-    fetch(`/api/videos/${id}`, {
-      method: 'DELETE'
+  const handleDelete = (videoId) => {
+    fetch(`http://localhost:3001/videos/${videoId}`, {
+      method: 'DELETE',
     })
-    .then(() => {
-      const updatedVideos = videos.filter(video => video.id !== id);
-      setVideos(updatedVideos);
-    })
-    .catch(error => console.error('Error deleting video:', error));
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const updatedVideos = videos.filter(video => video.id !== videoId);
+        setVideos(updatedVideos);
+      })
+      .catch(error => {
+        console.error('Error deleting video:', error);
+      });
   };
 
   return (
     <div>
       <Header />
+      <Banner></Banner>
       <main className={styles.home}>
         <h1>AluraFlix</h1>
-        <CategorySection title="Frontend" videos={videos.filter(video => video.category === 'Frontend')} onEdit={handleEdit} onDelete={handleDelete} />
-        <CategorySection title="Backend" videos={videos.filter(video => video.category === 'Backend')} onEdit={handleEdit} onDelete={handleDelete} />
-        <CategorySection title="Inovação" videos={videos.filter(video => video.category === 'Inovação')} onEdit={handleEdit} onDelete={handleDelete} />
-        <CategorySection title="Gestão" videos={videos.filter(video => video.category === 'Gestão')} onEdit={handleEdit} onDelete={handleDelete} />
+        <CategorySection
+          title="Frontend"
+          videos={videos.filter(video => video.category === 'Frontend')}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+        />
+        <CategorySection
+          title="Backend"
+          videos={videos.filter(video => video.category === 'Backend')}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+        />
+        <CategorySection
+          title="Inovação"
+          videos={videos.filter(video => video.category === 'Inovação')}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+        />
+        <CategorySection
+          title="Gestão"
+          videos={videos.filter(video => video.category === 'Gestão')}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+        />
       </main>
       <Footer />
       {editModalOpen && (

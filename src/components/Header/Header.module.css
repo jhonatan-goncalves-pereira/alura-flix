@@ -3,10 +3,12 @@
   justify-content: space-between;
   align-items: center;
   padding: 10px 20px;
-  background-color: rgba(0, 0, 0, .8);
+  background-color: rgba(0, 0, 0, .9);
   color: white;
   border-bottom: 3px solid #2271D1;
-  box-shadow: 0px 0px 20px #2271D1;
+  box-shadow: 0px 5px 10px #3987e6;
+  z-index: 9;
+  height: 120px;
 }
 
 .logo img {
@@ -14,12 +16,28 @@
 }
 
 .navLink {
-  color: white;
   text-decoration: none;
-  margin: 0 10px;
+  border: 2px solid #FFFFFF;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s;
+  opacity: 1;
+  color: #ffffff;
+  padding: 10px 30px;
+  margin:20px 10px
+  
 }
 
 .navLink.active {
   font-weight: bold;
-  text-decoration: underline;
+  background-color: rgba(0, 0, 0, 0.898);
+  border: 2px solid #2271D1;
+}
+.navLink:hover {
+    background-color: rgba(0, 0, 0, 0.898);
+    color: #FFFFFF;
+    border: 2px solid #2271D1;
+    border-radius: 10px;
+    box-shadow: 0px 0px 12px 4px #2271D1 inset;
+    opacity: 1;
 }

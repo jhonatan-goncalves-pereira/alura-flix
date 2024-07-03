@@ -1,33 +1,43 @@
 .novoVideo {
    text-align: center;
     padding: 20px;
-
+    background-color: rgba(0, 0, 0, .86);
     flex-direction: column;
-  }
-  .novoVideo h1 {
-    margin-bottom: 20px;
+    color: #FFFFFF;
   }
   .novoVideo form {
-    width: 80%;
     margin-left: 9%;
     display: flex;
     flex-direction: column;
+    gap:10px
   }
   .novoVideo label {
-    margin-bottom: 10px;
+    width: 90%;
+    box-sizing: border-box;
+    color: #FFFFFF;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    text-align: left;
+    position: relative;
   }
   .novoVideo input,
   .novoVideo select,
   .novoVideo textarea {
-    padding: 8px;
+    padding: 10px;
     margin-top: 5px;
     margin-bottom: 10px;
     width: 100%;
+    box-sizing: border-box;
   }
   
   .novoVideo button {
+    width: 90%;
+    background-color: rgba(0, 0, 0, .8);
+    color: aliceblue;
     padding: 10px 20px;
     margin-right: 10px;
     cursor: pointer;
+    width: 25%;
   }
   

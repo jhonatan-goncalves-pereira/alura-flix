@@ -1,3 +1,5 @@
+// CategorySection.js
+
 import React from 'react';
 import styles from './CategorySection.module.css';
 
